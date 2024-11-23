@@ -16,8 +16,9 @@ pipeline {
         }
         stage('Push to DockerHub') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
+                        sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
                         docker.image('mariamwafik333/fullstackspringbootangular_2').push('latest')
                     }
                 }
