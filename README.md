@@ -1,3 +1,4 @@
 # CI-CD-pipeline-project
 
-try to deploy
+try to deploy add actions 
+شيي
