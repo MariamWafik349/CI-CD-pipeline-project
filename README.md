@@ -1,3 +1,4 @@
+![1_bxrQ1cEM4M6PeutaCOJ2Tw](https://github.com/user-attachments/assets/898a524a-d7d3-402e-b42c-935475a3c7d6)
 🚀 Full CI/CD Pipeline Project for Node.js Applications
 This project demonstrates the creation of a comprehensive CI/CD pipeline designed to automate the build, test, and deployment processes for a Node.js application. By leveraging GitHub Actions, Docker, and AWS EC2, we create a seamless pipeline that simplifies development workflows and ensures reliable deployments.
 
@@ -24,9 +25,9 @@ Git for version control
 🔑 Configuration
 GitHub Secrets Setup
 To unlock the magic of automation, configure the following secrets in your GitHub repository:
-![1_bxrQ1cEM4M6PeutaCOJ2Tw](https://github.com/user-attachments/assets/525b1e3b-ca77-41cd-933b-eef7d25a49c9)
 
-DOCKER_USERNAME: Your Docker Hub username![1_bxrQ1cEM4M6PeutaCOJ2Tw](https://github.com/user-attachments/assets/bb1dff91-4f93-4a7e-9980-29ba599cbc42)
+DOCKER_USERNAME: Your Docker Hub username
+
 
 DOCKER_PASSWORD: Docker Hub password or personal access token
 AWS_SSH_KEY: SSH private key for accessing your EC2 instance
