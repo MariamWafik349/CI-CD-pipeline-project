@@ -77,7 +77,7 @@ Features
 A simple yet robust Express.js application.
 
 Endpoints
-/: Responds with "Hello, King Memo!"
+/: Responds with "Hello, Marioum"
 /health: Provides real-time server health status.
 🔒 Security Highlights
 GitHub Secrets: Protects sensitive information like Docker Hub credentials and SSH keys.
