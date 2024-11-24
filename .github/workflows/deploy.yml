@@ -1,116 +1,48 @@
-name: CI/CD Pipeline
+name: Deploy to EC2
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    
-    concurrency: 
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
 
     steps:
+    # Step 1: Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Login to Docker Hub
+    # Step 2: Log in to DockerHub
+    - name: Log in to DockerHub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: |
-          ${{ secrets.DOCKER_USERNAME }}/fullstackspringbootangular_2:latest
-          ${{ secrets.DOCKER_USERNAME }}/fullstackspringbootangular_2:${{ github.sha }}
-        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/fullstackspringbootangular_2:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/fullstackspringbootangular_2:buildcache,mode=max
-        platforms: linux/amd64,linux/arm64
+    # Step 3: Pull Docker image
+    - name: Pull Docker image
+      run: docker pull mariamwafik333/fullstackspringbootangular_2:latest
 
+    # Step 4: Deploy to EC2 via SSH
     - name: Deploy to EC2
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      env:
-        DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/fullstackspringbootangular_2:latest
-        DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
-      run: |
-        mkdir -p ~/.ssh
-        chmod 700 ~/.ssh
-        
-        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/deploy_key
-        chmod 600 ~/.ssh/deploy_key
-        
-        cat > ~/.ssh/config << EOF
-        Host *
-          StrictHostKeyChecking no
-          UserKnownHostsFile=/dev/null
-          IdentityFile ~/.ssh/deploy_key
-          ServerAliveInterval 60
-          ServerAliveCountMax 3
-        EOF
-        chmod 600 ~/.ssh/config
-        
-        echo "Testing SSH connection..."
-        ssh -i ~/.ssh/deploy_key ec2-user@${{ secrets.AWS_HOST }} "echo 'SSH connection successful'"
-        
-        ssh -i ~/.ssh/deploy_key ec2-user@${{ secrets.AWS_HOST }} "
-          set -e
-          echo 'Pulling Docker image...'
-          docker pull ${DOCKER_IMAGE}
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          # Pull the latest Docker image
+          docker pull mariamwafik333/fullstackspringbootangular_2:latest
           
-          echo 'Stopping existing container...'
-          docker stop fullstackspringbootangular_2 || true
-          docker rm fullstackspringbootangular_2 || true
+          # Stop any running containers
+          docker stop $(docker ps -q) || true
           
-          echo 'Starting new container...'
-          docker run -d \
-            --name fullstackspringbootangular_2 \
-            --restart unless-stopped \
-            -p ${DEPLOY_PORT}:3000 \
-            --health-cmd='curl -f http://localhost:3000/health || exit 1' \
-            --health-interval=30s \
-            --health-timeout=10s \
-            --health-retries=3 \
-            --memory=512m \
-            --cpus=0.5 \
-            ${DOCKER_IMAGE}
+          # Remove stopped containers to free up resources
+          docker rm $(docker ps -aq) || true
           
-          echo 'Waiting for container health check...'
-          sleep 10
-          
-          echo 'Verifying deployment...'
-          if ! docker ps | grep -q 'fullstackspringbootangular_2'; then
-            echo 'Container failed to start'
-            docker logs fullstackspringbootangular_2
-            exit 1
-          fi
-          
-          echo 'Cleaning up old images...'
-          docker image prune -f --all --filter 'until=24h'
-        "
+          # Run the application container
+          docker run -d -p 3000:3000 --name app mariamwafik333/fullstackspringbootangular_2:latest
 
-    - name: Cleanup
-      if: always()
-      run: |
-        rm -rf ~/.ssh
-        docker buildx prune -f
-
-    - name: Notify on failure
-      if: failure()
-      run: |
-        echo "Deployment failed!"
