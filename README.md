@@ -17,13 +17,13 @@ To fully enjoy this project, ensure the following are set up:
 
 Node.js (v18 or newer)
 Docker installed on your machine
-A GitHub account for the repository
-A Docker Hub account for storing container images
-An AWS EC2 instance to host your application
+GitHub account for the repository
+Docker Hub account for storing container images
+AWS EC2 instance to host your application
 Git for version control
 🔑 Configuration
 GitHub Secrets Setup
-To unlock the magic of automation, you’ll need to configure the following secrets in your GitHub repository:
+To unlock the magic of automation, configure the following secrets in your GitHub repository:
 
 DOCKER_USERNAME: Your Docker Hub username
 DOCKER_PASSWORD: Docker Hub password or personal access token
@@ -38,22 +38,18 @@ Commits pushed to the main branch
 Pull requests targeting the main branch
 ✨ Steps
 Code Checkout
-
 Pulls the repository code.
 Performs an efficient shallow clone for faster operations.
 Automated Version Management
-
 Updates the application version with every release.
 Tags the repository with the updated version.
 Pushes the tags back to GitHub for tracking.
 Docker Build and Push
-
 Configures Docker Buildx for multi-platform builds.
 Authenticates with Docker Hub using secure credentials.
 Builds lightweight Docker images for your application.
 Pushes the images to Docker Hub for deployment.
 Deploy to AWS EC2
-
 Establishes secure SSH access to your EC2 instance.
 Pulls the latest Docker image from Docker Hub.
 Manages the container lifecycle:
@@ -62,7 +58,6 @@ Starts the new container.
 Performs health checks to verify deployment success.
 Implements automatic rollback if health checks fail.
 Automated Cleanup
-
 Deletes temporary SSH artifacts for security.
 Clears unused Docker layers to save resources.
 🐳 Docker Configuration
@@ -76,7 +71,8 @@ Health Check: Monitored every 30 seconds
 🌐 Application Overview
 Features
 A simple yet robust Express.js application.
-Endpoints:
+
+Endpoints
 /: Responds with "Hello, King Memo!"
 /health: Provides real-time server health status.
 🔒 Security Highlights
@@ -95,8 +91,7 @@ Health Check Frequency: Every 30 seconds
 Timeout: 10 seconds per check
 Retry Policy: 3 failed attempts trigger auto-restart
 🤝 Contributing
-We’re thrilled to have you contribute! Follow these steps to join:
-
+Steps to Contribute
 Fork the Repository: Start by forking the repository to your GitHub account.
 Create a Feature Branch: Name your branch descriptively to reflect the changes.
 Commit Changes: Make your changes and use clear, descriptive commit messages.
