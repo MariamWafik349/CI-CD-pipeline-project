@@ -1,17 +1,16 @@
-# Use Node.js LTS (Long Term Support) version
-FROM node:18-alpine
+# Use Node.js LTS as the base image
+FROM node:lts
 
-# Set working directory
-WORKDIR /app
+# Set the working directory
+WORKDIR /usr/src/app
 
-# Copy package files
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
-# Using npm install instead of npm ci since package-lock.json might not exist
 RUN npm install
 
-# Copy the rest of the application
+# Copy the rest of the application files
 COPY . .
 
 # Expose port 3000
