@@ -24,8 +24,10 @@ Git for version control
 🔑 Configuration
 GitHub Secrets Setup
 To unlock the magic of automation, configure the following secrets in your GitHub repository:
+![1_bxrQ1cEM4M6PeutaCOJ2Tw](https://github.com/user-attachments/assets/525b1e3b-ca77-41cd-933b-eef7d25a49c9)
 
-DOCKER_USERNAME: Your Docker Hub username
+DOCKER_USERNAME: Your Docker Hub username![1_bxrQ1cEM4M6PeutaCOJ2Tw](https://github.com/user-attachments/assets/bb1dff91-4f93-4a7e-9980-29ba599cbc42)
+
 DOCKER_PASSWORD: Docker Hub password or personal access token
 AWS_SSH_KEY: SSH private key for accessing your EC2 instance
 AWS_HOST: IP address or hostname of the EC2 instance
