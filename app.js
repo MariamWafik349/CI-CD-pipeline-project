@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello, King Memo!');
+  res.send('WELLCOME TO NTI');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+const PORT = 3000; // Ensure this is capitalized and consistent
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`); // Correct variable name
 });
+
